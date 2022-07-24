@@ -32,8 +32,11 @@ class ProducerTest {
 
     private Producer producer;
 
+    private Producer localProducer;
+
     @BeforeEach
     void setUp() {
+        localProducer = new Producer(container.getBootstrapServers());
         producer = new Producer("localhost:9092");
     }
 
@@ -45,14 +48,14 @@ class ProducerTest {
     @Test
     void sendRecord() {
         final var message = "Hello, World";
-        producer.sendRecord("demo_java", message);
+        localProducer.sendRecord("demo_java", message);
     }
 
     @Test
     void sendRecordWithCallback() {
         final var message = "Hello, World";
         AtomicBoolean conditionMet = new AtomicBoolean(false);
-        producer.sendRecord("demo_java", message, (recordMetadata, e) -> {
+        localProducer.sendRecord("demo_java", message, (recordMetadata, e) -> {
             if (e != null) {
                 fail(e);
             } else {
