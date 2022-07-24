@@ -107,7 +107,7 @@ class ProducerTest {
     }
 
     @Test
-    void sendRecordWithDifferentKey(){
+    void sendRecordWithDifferentKey() {
         final var key = "key";
         final var message = "Hello, World";
         AtomicReference<List<Integer>> reference = new AtomicReference<>(new ArrayList<>());
