@@ -1,5 +1,6 @@
 package org.oaksoft;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -11,29 +12,45 @@ import java.util.Properties;
 
 public class Producer {
 
-    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
+    private final Logger logger = LoggerFactory.getLogger(Producer.class);
 
-    public static void main(String[] args) {
-        sendRecord("localhost:9092", "demo_java", "Hello, World!");
-    }
+    private final KafkaProducer<String, String> kafkaProducer;
 
-    public static void sendRecord(String brokers, String topic, String message) {
+    public Producer(String brokers) {
         // create producer properties
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-        // create producer
-        try (var kafkaProducer = new KafkaProducer<String, String>(properties)) {
-            // send data
-            var record = new ProducerRecord<String, String>(topic, message);
-            kafkaProducer.send(record);
+        kafkaProducer = new KafkaProducer<>(properties);
+    }
 
-            // flush and close the producer
-            kafkaProducer.flush();
-        }
+    public void sendRecord(String topic, String message) {
+        sendRecord(topic, message, null);
+    }
+
+    public void sendRecord(String topic, String message, Callback callback) {
+        var record = new ProducerRecord<String, String>(topic, message);
+
+        kafkaProducer.send(record, callback);
 
         logger.info("Record sent!");
+    }
+
+    public void sendRecord(String topic, String key, String message, Callback callback) {
+        var record = new ProducerRecord<>(topic, key, message);
+
+        kafkaProducer.send(record, callback);
+
+        logger.info("Record sent!");
+    }
+
+    public void close() {
+        if (kafkaProducer != null) {
+            // flush and close the producer
+            kafkaProducer.flush();
+            kafkaProducer.close();
+        }
     }
 }
