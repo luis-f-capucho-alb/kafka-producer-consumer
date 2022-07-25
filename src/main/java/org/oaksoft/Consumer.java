@@ -1,8 +1,6 @@
 package org.oaksoft;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
@@ -11,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Consumer {
@@ -26,6 +26,9 @@ public class Consumer {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "my-second_application");
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
+        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + args[0]);
+        properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, String.valueOf(Duration.ofMinutes(3).toMillis()));
 
         final Thread mainThread = Thread.currentThread();
 
@@ -46,7 +49,7 @@ public class Consumer {
             kafkaConsumer.subscribe(Collections.singletonList("demo_java"));
 
             while (!interrupted.get()) {
-                logger.info("Polling...");
+                logger.debug("Polling...");
 
                 var records = kafkaConsumer.poll(Duration.ofMillis(1000));
 

@@ -26,6 +26,15 @@ public class Producer {
         kafkaProducer = new KafkaProducer<>(properties);
     }
 
+    public static void main(String[] args) throws InterruptedException {
+        var producer = new Producer("localhost:9092");
+        var i = 0;
+        while (true) {
+            producer.sendRecord("demo_java", "Hello, World " + (++i));
+            Thread.sleep(1500);
+        }
+    }
+
     public void sendRecord(String topic, String message) {
         sendRecord(topic, message, null);
     }
