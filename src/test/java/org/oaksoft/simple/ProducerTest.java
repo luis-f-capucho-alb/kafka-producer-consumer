@@ -1,4 +1,4 @@
-package org.oaksoft;
+package org.oaksoft.simple;
 
 import org.apache.kafka.clients.producer.Callback;
 import org.junit.jupiter.api.AfterEach;

@@ -1,4 +1,4 @@
-package org.oaksoft;
+package org.oaksoft.simple;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.KafkaException;
@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Consumer {
