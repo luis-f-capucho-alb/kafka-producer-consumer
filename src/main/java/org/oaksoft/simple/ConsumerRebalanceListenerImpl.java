@@ -1,4 +1,4 @@
-package org.oaksoft;
+package org.oaksoft.simple;
 
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
