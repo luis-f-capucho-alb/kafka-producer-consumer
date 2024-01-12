@@ -1,4 +1,4 @@
-package org.oaksoft.simple;
+package org.testkafka.simple;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.KafkaException;
@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Consumer {
@@ -26,16 +27,20 @@ public class Consumer {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "my-second_application");
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + args[0]);
+        //THIS IS THE PROPERTY THAT SETS THE ERRO FOR REBALANCE IF NOT DEFINED PROPERLY
+        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + 1);
+
+        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + 1);
         properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, String.valueOf(Duration.ofMinutes(4).toMillis()));
-        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+
 
         final Thread mainThread = Thread.currentThread();
 
         final var kafkaConsumer = new KafkaConsumer<String, String>(properties);
 
         final var listener = new ConsumerRebalanceListenerImpl(kafkaConsumer);
-
+        
         Thread shutdownHook = new Thread(() -> {
             interrupted.set(true);
             kafkaConsumer.wakeup();
@@ -74,12 +79,12 @@ public class Consumer {
             } catch (KafkaException ex) {
                 logger.error(ex.getMessage());
             } finally {
-               try {
-                   kafkaConsumer.close();
-                   logger.info("The consumer is now gracefully closed.");
-               } catch (RuntimeException ex) {
-                   logger.error(ex.getMessage());
-               }
+                try {
+                    kafkaConsumer.close();
+                    logger.info("The consumer is now gracefully closed.");
+                } catch (RuntimeException ex) {
+                    logger.error(ex.getMessage());
+                }
             }
         }
     }

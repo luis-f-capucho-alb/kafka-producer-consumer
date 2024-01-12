@@ -1,4 +1,4 @@
-package org.oaksoft.simple;
+package org.testkafka.simple;
 
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -31,15 +31,15 @@ public class ConsumerRebalanceListenerImpl implements ConsumerRebalanceListener 
 
     @Override
     public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
-        logger.info("onPartitionsRevoked callback triggered");
+        logger.info("onPartitionsRevoked callback triggered : {}",partitions);
         logger.info("Committing offsets: " + currentOffsets);
 
-        consumer.commitSync(currentOffsets);
+     //   consumer.commitSync(currentOffsets);
     }
 
     @Override
     public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-        logger.info("onPartitionsAssigned callback triggered");
+        logger.info("onPartitionsAssigned callback triggered : {}",partitions);
     }
 
     public Map<TopicPartition, OffsetAndMetadata> getCurrentOffsets() {

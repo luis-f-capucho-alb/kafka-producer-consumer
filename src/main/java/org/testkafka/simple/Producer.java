@@ -1,4 +1,4 @@
-package org.oaksoft.simple;
+package org.testkafka.simple;
 
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
