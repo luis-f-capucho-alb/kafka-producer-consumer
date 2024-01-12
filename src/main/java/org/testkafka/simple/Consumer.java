@@ -28,9 +28,9 @@ public class Consumer {
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
         //THIS IS THE PROPERTY THAT SETS THE ERRO FOR REBALANCE IF NOT DEFINED PROPERLY
-        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + 1);
+       // properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + 1);
 
-        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + 1);
+        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "group-instance-id-" + UUID.randomUUID().getLeastSignificantBits());
         properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, String.valueOf(Duration.ofMinutes(4).toMillis()));
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
 

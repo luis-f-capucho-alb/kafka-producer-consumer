@@ -31,7 +31,7 @@ public class ConsumerRebalanceListenerImpl implements ConsumerRebalanceListener 
 
     @Override
     public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
-        logger.info("onPartitionsRevoked callback triggered : {}",partitions);
+        logger.info("onPartitionsRevoked callback triggered : {}", partitions);
         logger.info("Committing offsets: " + currentOffsets);
 
      //   consumer.commitSync(currentOffsets);
